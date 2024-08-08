@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, Stack, Typography, Button, Modal, TextField } from '@mui/material'
+import { Box, Stack, Typography, Button, Modal, TextField, Card, CardActions, CardContent, Grid } from '@mui/material'
 import { useState, useEffect } from 'react'
 import { firestore } from '@/firebase'
 import {
@@ -12,6 +12,8 @@ import {
   deleteDoc,
   getDoc,
 } from 'firebase/firestore'
+
+import BuildIcon from '@mui/icons-material/Build';
 
 const style = {
   position: 'absolute',
@@ -75,11 +77,7 @@ export default function Home() {
     updateInventory()
   }, []);
   
-
-
-
   /* Implement add and remove functions to handle adding and removing items: */
-
 
   const addItem = async (item) => {
   // 1. Create a reference to the document in the 'inventory' collection with the given item name
@@ -136,7 +134,9 @@ export default function Home() {
     handleOpen(): Sets open to true, which opens the modal.
     handleClose(): Sets open to false, which closes the modal.
   */
+ 
   return (
+    
     <Box
       width="100vw"
       height="100vh"
@@ -148,7 +148,6 @@ export default function Home() {
     >
 
 {/* modal start */}
-
 {/* 
 in modal, there is bracket in open and handleClose because it is javascript variable /function
 `open` is state variable 
@@ -186,49 +185,79 @@ in modal, there is bracket in open and handleClose because it is javascript vari
         </Box>
       </Modal>
       {/* modal end */}
-
-      <Button variant="contained" onClick={handleOpen}>
-        Add New Item
-      </Button>
-      
-      <Box border={'1px solid #333'}>
-        <Box
-          width="800px"
-          height="100px"
-          bgcolor={'#ADD8E6'}
-          display={'flex'}
-          justifyContent={'center'}
-          alignItems={'center'}
+            
+      {/* container */}
+      <Box 
+        border={'1px solid #333'}
+        width="80vw"
+        height="80vh"
         >
-          <Typography variant={'h2'} color={'#333'} textAlign={'center'}>
-            Inventory Items
-          </Typography>
+          {/* header */}
+        <Box
+          width="100%"
+          height="10%"
+          display={'flex'}
+          justifyContent={'space-between'}
+          alignItems={'center'}
+          paddingX={10}
+        >
+          <Box  display={'flex'} alignItems={'center'}>
+            <Typography   variant="h5" color={'#333'} marginRight={2}>
+              Virtual Storage
+            </Typography>
+            <BuildIcon fontSize="medium" color="#424242"/>
+          </Box>
+          {/* add item button */}
+          <Button variant="contained" onClick={handleOpen}>
+            Add Item
+          </Button>
         </Box>
-        <Stack width="800px" height="300px" spacing={2} overflow={'auto'}>
+        
+        <Grid container width="100%" height="500px" gap={2}   
+          sx={{
+            overflowX: 'hidden',  // Hide horizontal overflow
+            overflowY: 'scroll',  // Enable vertical scrolling
+            scrollbarWidth: 'thin',  // Firefox
+            scrollbarColor: 'grey transparent',  // Firefox
+            paddingLeft: 2,
+          }}
+          >
           {inventory.map(({name, quantity}) => (
-            <Box
+            <Grid
+              item
               key={name}
-              width="100%"
               minHeight="150px"
+              md={3.85}
               display={'flex'}
               justifyContent={'space-between'}
               alignItems={'center'}
-              bgcolor={'#f0f0f0'}
               paddingX={5}
+              sx={{
+                bgcolor: '#ffffff', // White background
+                borderRadius: '8px', // Rounded corners
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Subtle shadow
+                transition: 'all 0.3s ease', // Smooth transition for hover effects
+                ':hover': {
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', // Shadow on hover
+                  transform: 'scale(1.02)', // Slight zoom effect on hover
+                },
+              }}
             >
-              <Typography variant={'h3'} color={'#333'} textAlign={'center'}>
+              <Typography variant={'h6'} color={'#333'} textAlign={'center'}>
                 {name.charAt(0).toUpperCase() + name.slice(1)}
               </Typography>
-              <Typography variant={'h3'} color={'#333'} textAlign={'center'}>
+              <Typography variant={'h6'} color={'#333'} textAlign={'center'}>
                 Quantity: {quantity}
               </Typography>
               <Button variant="contained" onClick={() => removeItem(name)}>
                 Remove
               </Button>
-            </Box>
+            </Grid>
           ))}
-        </Stack>
+        </Grid>
       </Box>
+      {/* container end */}
     </Box>
+    /* body end*/
   );
 }
