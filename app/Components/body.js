@@ -19,7 +19,7 @@ export function Body({ inventory, addItem, removeItem }) {
   {/* container */}
   <Box 
     width="80vw"
-    height="70%"
+    height="90%"
     >
 
     
@@ -30,6 +30,8 @@ export function Body({ inventory, addItem, removeItem }) {
         scrollbarWidth: 'thin',  // Firefox
         scrollbarColor: '#a1a1a1 transparent',  // Firefox
         padding: 2,
+        backgroundColor: 'rgba(0,0,0,0.3)',
+        borderRadius: '5px',
       }}
       >
         {/* we are destructuring inventory here using the map method */}
@@ -57,13 +59,13 @@ export function Body({ inventory, addItem, removeItem }) {
         >
           <Box>
             {/* Product */}
-            <Typography variant="h4" component="div" color={'#333'} fontWeight={700} textAlign={'center'} py={3}>
+            <Typography variant="h4" component="div" color={'#3c3c3c'} fontWeight={700} textAlign={'center'} py={3}>
               {name.charAt(0).toUpperCase() + name.slice(1)}
             </Typography>
 
             <Box>
               <Typography variant={'p'}  component="div" pt={1} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                Type: {type}
+                Type: {type.charAt(0).toUpperCase() + type.slice(1)}
               </Typography>
               <Typography variant={'p'}  component="div" pt={1} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                 Quantity: {quantity}
@@ -72,8 +74,8 @@ export function Body({ inventory, addItem, removeItem }) {
             
           </Box>
 
-          <Typography variant={'p'} component="div" color={'#333'} py={1} mt={2}>
-            Description: {description}
+          <Typography variant={'p'} component="div" py={1} mt={2} sx={{ fontSize: 15 }} color="text.secondary">
+            <Typography mb={1}>Description:</Typography> {description.charAt(0).toUpperCase() + description.slice(1)}
           </Typography>
 
           <Button variant="contained" color="error"  sx={{ backgroundColor: '#ef5350', mb: 4 }}  onClick={() => removeItem(name)}>

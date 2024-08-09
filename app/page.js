@@ -50,25 +50,33 @@ export default function Home() {
     updateInventory()
   }, []);
   
-  /* Implement add and remove functions to handle adding and removing items: */
-  const addItem = async (item) => {
-  // 1. Create a reference to the document in the 'inventory' collection with the given item name
-  const docRef = doc(collection(firestore, 'inventory'), item);
-  // 2. Get the current document snapshot
-  const docSnap = await getDoc(docRef);
-  // 3. Check if the document exists
-  if (docSnap.exists()) {
-  // 4. If it exists, retrieve the current quantity (destructuring)
-  const { quantity } = docSnap.data();
-  // 5. Update the document with the new quantity (increment by 1)
-  await setDoc(docRef, { quantity: quantity + 1 });
-  } else {
-    // 6. If it doesn't exist, create a new document with quantity 1
-    await setDoc(docRef, { quantity: 1 });
-  }
-  // 7. Refresh the inventory data to reflect changes
-  await updateInventory();
-}
+  const addItem = async (itemName, type, quantity, description) => {
+    // 1. Create a reference to the document in the 'inventory' collection with the given item name
+    const docRef = doc(collection(firestore, 'inventory'), itemName.toLowerCase());
+  
+    // 2. Get the current document snapshot
+    const docSnap = await getDoc(docRef);
+  
+    if (docSnap.exists()) {
+      // 3. If it exists, retrieve the current quantity and update it
+      const { quantity: currentQuantity } = docSnap.data();
+      await setDoc(docRef, { 
+        quantity: currentQuantity + quantity, // Increment quantity
+        type, 
+        description 
+      }, { merge: true }); // Use merge to avoid overwriting other fields
+    } else {
+      // 4. If it doesn't exist, create a new document with the provided data
+      await setDoc(docRef, { 
+        quantity, 
+        type, 
+        description 
+      });
+    }
+  
+    // 5. Refresh the inventory data to reflect changes
+    await updateInventory();
+  };
   /* 
   await
   await getDoc(docRef): This pauses the execution of addItem until the getDoc(docRef) Promise resolves. This Promise resolves to a snapshot of the document in Firestore. If the document is not yet retrieved, the function waits here.
@@ -85,11 +93,8 @@ export default function Home() {
     if (docSnap.exists()) {
       /*  (destructuring) */
       const { quantity } = docSnap.data()
-      if (quantity === 1) {
-        await deleteDoc(docRef)
-      } else {
-        await setDoc(docRef, { quantity: quantity - 1 })
-      }
+
+      await deleteDoc(docRef);
     }
     await updateInventory()
   }
@@ -138,9 +143,11 @@ const item = [
           }
         } 
       >
+        <AddItemModal inventory={inventory} open={open} handleClose={handleClose} itemName={itemName} setItemName={setItemName} addItem={addItem}/>
+
         <Header handleOpen={handleOpen}  />
-        <AddItemModal open={open} handleClose={handleClose} itemName={itemName} setItemName={setItemName} addItem={addItem}/>
-        <Body inventory={inventory}/>
+
+        <Body inventory={inventory} removeItem={removeItem}/>
       </Box>
     </Box>
   );
