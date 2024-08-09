@@ -114,10 +114,34 @@ const item = [
 
  
   return (
-    <Box>
-      <Header handleOpen={handleOpen}  />
-      <AddItemModal open={open} handleClose={handleClose} itemName={itemName} setItemName={setItemName} addItem={addItem}/>
-      <Body inventory={inventory} addItem={addItem} removeItem={removeItem}/>
+    <Box
+      sx={{
+        backgroundColor: '#D5B79B', 
+        // Optional: use this as a fallback color
+        backgroundImage: `url('/bg-cutting-board.webp')`, 
+        // Set the background image
+        backgroundSize: 'cover', 
+        // Make sure the image covers the entire Box
+        backgroundRepeat: 'no-repeat', 
+        // Prevent the image from repeating
+        backgroundPosition: 'center', 
+        // Center the image
+      }}
+    >
+      <Box
+        sx={
+          {
+            background: 'linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("/pantry-bg.jpeg")',
+            backgroundSize: 'cover', // Make sure the image covers the entire Box
+            backgroundRepeat: 'no-repeat', // Prevent the image from repeating
+            backgroundPosition: 'center', // Center the image
+          }
+        } 
+      >
+        <Header handleOpen={handleOpen}  />
+        <AddItemModal open={open} handleClose={handleClose} itemName={itemName} setItemName={setItemName} addItem={addItem}/>
+        <Body inventory={inventory}/>
+      </Box>
     </Box>
   );
 }

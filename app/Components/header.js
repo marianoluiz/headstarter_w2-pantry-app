@@ -14,7 +14,7 @@ export function Header({ handleOpen }) {
     justifyContent={'space-between'}
     alignItems={'center'}
     paddingX={20}
-    sx={{backgroundColor: '#D5B79B'}}
+    sx={{background: 'rgba(255, 255, 255, 0.9)'}}
   >
     <Box  display={'flex'} alignItems={'center'} > 
     <Image
@@ -24,7 +24,7 @@ export function Header({ handleOpen }) {
         height={50} // Height of the image
       />
       <Typography   variant="h4" color={'primary'} fontWeight={700} marginLeft={2}>
-        Virtual Storage
+        Virtual Pantry
       </Typography>
       {/* <BuildIcon fontSize="medium" color="#424242"/> */}
 

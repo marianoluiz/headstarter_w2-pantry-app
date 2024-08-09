@@ -2,8 +2,6 @@
 
 import { Box, Stack, Typography, Button, Modal, TextField, Card, CardActions, CardContent, Grid } from '@mui/material'
 
-
-
 export function Body({ inventory, addItem, removeItem }) {
   return(
   <Box
@@ -12,7 +10,9 @@ export function Body({ inventory, addItem, removeItem }) {
   display={'flex'}
   justifyContent={'center'}
   pt={3}
-  sx={{backgroundColor: '#D5B79B'}}
+  sx={{
+    background: 'transparent',
+  }}
   >
   
         
@@ -32,7 +32,8 @@ export function Body({ inventory, addItem, removeItem }) {
         padding: 2,
       }}
       >
-      {inventory.map(({name, quantity}) => (
+        {/* we are destructuring inventory here using the map method */}
+      {inventory.map(({name, quantity, type, description}) => (
         <Grid
           item
           key={name}
@@ -47,7 +48,7 @@ export function Body({ inventory, addItem, removeItem }) {
             borderRadius: '8px', // Rounded corners
             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Subtle shadow
             transition: 'all 0.3s ease', // Smooth transition for hover effects
-            backgroundColor: '#d6c6b8',
+            backgroundColor: 'rgba(255,255,255,.8)',
             ':hover': {
               boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', // Shadow on hover
               transform: 'scale(1.01)', // Slight zoom effect on hover
@@ -62,18 +63,18 @@ export function Body({ inventory, addItem, removeItem }) {
 
             <Box>
               <Typography variant={'p'}  component="div" pt={1} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                Type: Food
+                Type: {type}
               </Typography>
               <Typography variant={'p'}  component="div" pt={1} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                 Quantity: {quantity}
               </Typography>
             </Box>
             
-            <Typography variant={'p'} component="div" color={'#333'} py={1} mt={2}>
-            Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          </Typography>
           </Box>
 
+          <Typography variant={'p'} component="div" color={'#333'} py={1} mt={2}>
+            Description: {description}
+          </Typography>
 
           <Button variant="contained" color="error"  sx={{ backgroundColor: '#ef5350', mb: 4 }}  onClick={() => removeItem(name)}>
             Remove
