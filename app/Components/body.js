@@ -1,23 +1,22 @@
 'use client'
 
-import { Box, Stack, Typography, Button, Modal, TextField, Card, CardActions, CardContent, Grid } from '@mui/material'
+import { Box, Grid, Typography, Button } from '@mui/material'
 import { useState } from 'react';
 
+import SearchAppBar from './searchAppBar'
+import { UpdateItemModal } from './updateItemModal'
 
-import SearchAppBar from './searchAppBar';
-
-export function Body({ inventory, addItem, removeItem }) {
-
+export function Body({ inventory, removeItem, updateItem }) {
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const handleOpenUpdate = (item) => {
+  const handleOpenUpdateItemModal = (item) => {
     setCurrentItem(item);
     setOpenUpdateModal(true);
   };
 
-  const handleCloseUpdate = () => {
+  const handleCloseUpdateItemModal = () => {
     setOpenUpdateModal(false);
     setCurrentItem(null);
   };
@@ -27,114 +26,90 @@ export function Body({ inventory, addItem, removeItem }) {
   };
 
   const filteredInventory = inventory.filter(({ name }) =>
-    name.toLowerCase().includes(searchQuery)
+    name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  return(
-  <Box
-  width="100vw"
-  height="85vh"
-  display={'flex'}
-  justifyContent={'center'}
-  pt={3}
-  sx={{
-    background: 'transparent',
-  }}
-  >
-  
-  
-        
-  {/* container */}
-  <Box 
-    width="80vw"
-    height="80%"
-    sx={
-      {
-        backgroundColor: 'rgba(255,255,255,0.3)',
-        borderRadius: '5px',
-      }
-    }
+  return (
+    <Box
+      width="100vw"
+      height="85vh"
+      display={'flex'}
+      justifyContent={'center'}
+      pt={3}
+      sx={{ background: 'transparent' }}
     >
-      <SearchAppBar  handleSearchChange={handleSearchChange} />
-    
-    <Grid container width="100%" height="80%" gap={2}   
-      sx={{
-        overflowX: 'hidden',  // Hide horizontal overflow
-        overflowY: 'auto',  // Enable vertical scrolling
-        scrollbarWidth: 'thin',  // Firefox
-        scrollbarColor: '#a1a1a1 transparent',  // Firefox
-        padding: 2,
-        backgroundColor: 'rgba(0,0,0,0.1)',
-        borderRadius: '5px',
-      }}
-      >
-        {/* we are destructuring inventory here using the map method */}
-      {filteredInventory.map(({name, quantity, type, description}) => (
-        <Grid
-          item
-          key={name}
-          minHeight="150px"
-          md={3.85}
-          display={'flex'}
-          direction={'column'}
-          justifyContent={'space-between'}
-          paddingX={5}
+      <Box width="80vw" height="90%">
+          <SearchAppBar value={searchQuery} onChange={handleSearchChange} />
+        
+
+        <Grid container width="100%" height="100%" gap={2}   
           sx={{
-            bgcolor: '#ffffff', // White background
-            borderRadius: '8px', // Rounded corners
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Subtle shadow
-            transition: 'all 0.3s ease', // Smooth transition for hover effects
-            backgroundColor: 'rgba(255,255,255,.8)',
-            ':hover': {
-              boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', // Shadow on hover
-              transform: 'scale(1.01)', // Slight zoom effect on hover
-            },
+            overflowX: 'hidden', 
+            overflowY: 'auto',  
+            scrollbarWidth: 'thin', 
+            scrollbarColor: '#a1a1a1 transparent', 
+            padding: 2,
+            backgroundColor: 'rgba(0,0,0,0.2)',
+            borderRadius: '0 0 5px 5px ',
           }}
         >
-          <Box>
-            {/* Product */}
-            <Typography variant="h4" component="div" color={'#3c3c3c'} fontWeight={700} textAlign={'center'} py={3}>
-              {name.charAt(0).toUpperCase() + name.slice(1)}
-            </Typography>
+          {filteredInventory.map((item) => (
+            <Grid
+              item
+              key={item.name}
+              minHeight="150px"
+              md={3.85}
+              display={'flex'}
+              direction={'column'}
+              justifyContent={'space-between'}
+              paddingX={5}
+              sx={{
+                bgcolor: '#ffffff',
+                borderRadius: '8px', 
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', 
+                transition: 'all 0.3s ease', 
+                backgroundColor: 'rgba(255,255,255,.8)',
+                ':hover': {
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)', 
+                  transform: 'scale(1.01)', 
+                },
+              }}
+            >
+              <Box>
+                <Typography variant="h4" component="div" color={'#3c3c3c'} fontWeight={700} textAlign={'center'} py={3}>
+                  {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+                </Typography>
 
-            <Box>
-              <Typography variant={'p'}  component="div" pt={1} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                Type: {type.charAt(0).toUpperCase() + type.slice(1)}
+                <Box>
+                  <Typography variant={'p'} component="div" pt={1} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                    Type: {item.type.charAt(0).toUpperCase() + item.type.slice(1)}
+                  </Typography>
+                  <Typography variant={'p'} component="div" pt={1} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                    Quantity: {item.quantity}
+                  </Typography>
+                </Box>
+              </Box>
+
+              <Typography variant={'p'} component="div" pb={3} mt={2} sx={{ fontSize: 15 }} color="text.secondary">
+                <Typography sx={{ fontSize: 14 }} mb={1}>Description:</Typography> {item.description.charAt(0).toUpperCase() + item.description.slice(1)}
               </Typography>
-              <Typography variant={'p'}  component="div" pt={1} sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                Quantity: {quantity}
-              </Typography>
-            </Box>
-            
-          </Box>
 
-          <Typography variant={'p'} component="div" pb={3} mt={2} sx={{ fontSize: 15 }} color="text.secondary">
-            <Typography sx={{ fontSize: 14 }} mb={1}>Description:</Typography> {description.charAt(0).toUpperCase() + description.slice(1)}
-          </Typography>
-
-          <Button variant="contained" color="error"  sx={{ backgroundColor: '#ef5350', mb: 4 }}  onClick={() => removeItem(name)}>
-            Remove
-          </Button>
+              <Button variant="contained" color="primary" sx={{ mb: 2 }} onClick={() => handleOpenUpdateItemModal(item)}>
+                Update
+              </Button>
+              <Button variant="contained" color="error" sx={{ backgroundColor: '#ef5350', mb: 4 }} onClick={() => removeItem(item.name)}>
+                Remove
+              </Button>
+            </Grid>
+          ))}
         </Grid>
-      ))}
-    </Grid>
-  </Box>
-  {/* container end */}
-
-
-  <UpdateItemModal
-          open={openUpdateModal}
-          onClose={handleCloseUpdate}
-          item={currentItem}
-          updateItem={updateItem}
-        />
-
-
-  </Box>
-
-
-
-
+      </Box>
+      <UpdateItemModal
+        handleCloseUpdateItemModal={handleCloseUpdateItemModal}
+        openUpdateModal={openUpdateModal}
+        currentItem={currentItem}
+        updateItem={updateItem}
+      />
+    </Box>
   )
-  
 }

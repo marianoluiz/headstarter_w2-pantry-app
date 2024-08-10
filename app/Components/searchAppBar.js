@@ -54,8 +54,8 @@ export const Search = styled('div')(({ theme }) => ({
   export default function SearchAppBar({ handleSearchChange }) {
     return (
             
-            <Box ml={'auto'} width={'40%'}  p={1}>
-              <Search>
+            <Box ml={'auto'} width={'40%'}  p={1} sx={{backgroundColor: 'rgba(0,0,0,0.2)' ,borderRadius: '5px 5px 0 0'}}>
+              <Search sx={{ backgroundColor: 'rgba(255,255,255,.5)'}}>
                 <SearchIconWrapper>
                   <SearchIcon />
                 </SearchIconWrapper>

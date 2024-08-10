@@ -16,15 +16,13 @@ import {
 import { Header } from './Components/header';
 import { Body } from './Components/body';
 import { AddItemModal } from './Components/addItemModal';
-
-
 export default function Home() {
   
   /* Add state management */
     /* store the list of inventory items fetched from Firestore. */
     const [inventory, setInventory] = useState([]);
     /*  manages the visibility of the modal (the one with the add item) */
-    const [open, setOpen] = useState(false);
+    const [openAddItemModal, setOpenAddItemModal] = useState(false);
     /* stores the name of the item */
     const [itemName, setItemName] = useState('');
 
@@ -101,13 +99,33 @@ export default function Home() {
 
   /* Add modal control functions to manage the modal state of adding items*/
 
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+  const handleOpenAddItemModal = () => setOpenAddItemModal(true)
+  const handleCloseAddItemModal = () => setOpenAddItemModal(false)
+  
+  const updateItem = async ({ itemName, type, quantity, description }, originalName) => {
+    if (typeof itemName === 'string' && itemName.trim() !== '') {
+      try {
+        const newDocRef = doc(collection(firestore, 'inventory'), itemName.toLowerCase());
+        const oldDocRef = doc(collection(firestore, 'inventory'), originalName.toLowerCase());
+  
+        // Set the new document with the new itemName
+        await setDoc(newDocRef, { type, quantity, description }, { merge: true });
+  
+        // Delete the old document if the name has changed
+        if (itemName.toLowerCase() !== originalName.toLowerCase()) {
+          await deleteDoc(oldDocRef);
+        }
+  
+        await updateInventory(); // Refresh inventory to reflect changes
+      } catch (error) {
+        console.error('Error updating item:', error);
+      }
+    } else {
+      console.error('itemName must be a non-empty string:', itemName);
+    }
+  };
+  
 
-  /* 
-    handleOpen(): Sets open to true, which opens the modal.
-    handleClose(): Sets open to false, which closes the modal.
-  */
 
 const item = [
   'tomato',
@@ -143,11 +161,12 @@ const item = [
           }
         } 
       >
-        <AddItemModal inventory={inventory} open={open} handleClose={handleClose} itemName={itemName} setItemName={setItemName} addItem={addItem}/>
+        <AddItemModal inventory={inventory} openAddItemModal={openAddItemModal} handleCloseAddItemModal={handleCloseAddItemModal} itemName={itemName} setItemName={setItemName} addItem={addItem} />
 
-        <Header handleOpen={handleOpen}  />
-        
-        <Body inventory={inventory} removeItem={removeItem}/>
+        <Header handleOpenAddItemModal={handleOpenAddItemModal}  />
+
+        <Body inventory={inventory} removeItem={removeItem} updateItem={updateItem}/>
+
       </Box>
     </Box>
   );

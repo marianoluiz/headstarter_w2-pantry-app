@@ -5,7 +5,7 @@ import Image from 'next/image';
 import thumbsUp from '/public/thumbs-up.png';
 
 
-export function Header({ handleOpen }) {
+export function Header({ handleOpenAddItemModal }) {
   return(
     <Box
     width={"100%"}
@@ -30,7 +30,7 @@ export function Header({ handleOpen }) {
 
     </Box>
     {/* add item button */}
-    <Button variant="contained" onClick={handleOpen}>
+    <Button variant="contained" onClick={handleOpenAddItemModal}>
       Add Item
     </Button>
 

@@ -4,7 +4,7 @@ import { Box, Stack, Typography, Button, Modal, TextField, Card, CardActions, Ca
 
 import React, { useState } from 'react';
 
-export function AddItemModal({ itemName, open, handleClose, addItem, setItemName}) {
+export function AddItemModal({ itemName, openAddItemModal, handleCloseAddItemModal, addItem, setItemName}) {
 
   const [type, setType] = useState(''); 
   const [quantity, setQuantity] = useState(1); // Default quantity is 1
@@ -18,8 +18,8 @@ export function AddItemModal({ itemName, open, handleClose, addItem, setItemName
   */
 
   <Modal
-    open={open}
-    onClose={handleClose}
+    open={openAddItemModal}
+    onClose={handleCloseAddItemModal}
     aria-labelledby="modal-modal-title"
     aria-describedby="modal-modal-description"
   >
@@ -108,7 +108,7 @@ export function AddItemModal({ itemName, open, handleClose, addItem, setItemName
             setType('')
             setQuantity(1)
             setDescription('')
-            handleClose()
+            handleCloseAddItemModal()
           }}>
           Add
         </Button>
