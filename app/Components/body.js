@@ -93,13 +93,16 @@ export function Body({ inventory, removeItem, updateItem }) {
               <Typography variant={'p'} component="div" pb={3} mt={2} sx={{ fontSize: 15 }} color="text.secondary">
                 <Typography sx={{ fontSize: 14 }} mb={1}>Description:</Typography> {item.description.charAt(0).toUpperCase() + item.description.slice(1)}
               </Typography>
+              
+              <Box display={'flex'} justifyContent={'space-between'}>
+                <Button variant="contained" color="primary" sx={{mb:4, width: '45%'}} onClick={() => handleOpenUpdateItemModal(item)}>
+                  Update
+                </Button>
+                <Button variant="contained" color="error" sx={{ backgroundColor: '#ef5350', mb: 4, width: '45%' }} onClick={() => removeItem(item.name)}>
+                  Remove
+                </Button>
+              </Box>
 
-              <Button variant="contained" color="primary" sx={{ mb: 2 }} onClick={() => handleOpenUpdateItemModal(item)}>
-                Update
-              </Button>
-              <Button variant="contained" color="error" sx={{ backgroundColor: '#ef5350', mb: 4 }} onClick={() => removeItem(item.name)}>
-                Remove
-              </Button>
             </Grid>
           ))}
         </Grid>
