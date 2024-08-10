@@ -99,7 +99,7 @@ export default function Home() {
     await updateInventory()
   }
 
-  /* Add modal control functions to manage the modal state */
+  /* Add modal control functions to manage the modal state of adding items*/
 
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
@@ -146,7 +146,7 @@ const item = [
         <AddItemModal inventory={inventory} open={open} handleClose={handleClose} itemName={itemName} setItemName={setItemName} addItem={addItem}/>
 
         <Header handleOpen={handleOpen}  />
-
+        
         <Body inventory={inventory} removeItem={removeItem}/>
       </Box>
     </Box>

@@ -1,8 +1,35 @@
 'use client'
 
 import { Box, Stack, Typography, Button, Modal, TextField, Card, CardActions, CardContent, Grid } from '@mui/material'
+import { useState } from 'react';
+
+
+import SearchAppBar from './searchAppBar';
 
 export function Body({ inventory, addItem, removeItem }) {
+
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [currentItem, setCurrentItem] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleOpenUpdate = (item) => {
+    setCurrentItem(item);
+    setOpenUpdateModal(true);
+  };
+
+  const handleCloseUpdate = () => {
+    setOpenUpdateModal(false);
+    setCurrentItem(null);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredInventory = inventory.filter(({ name }) =>
+    name.toLowerCase().includes(searchQuery)
+  );
+
   return(
   <Box
   width="100vw"
@@ -15,27 +42,34 @@ export function Body({ inventory, addItem, removeItem }) {
   }}
   >
   
+  
         
   {/* container */}
   <Box 
     width="80vw"
-    height="90%"
+    height="80%"
+    sx={
+      {
+        backgroundColor: 'rgba(255,255,255,0.3)',
+        borderRadius: '5px',
+      }
+    }
     >
-
+      <SearchAppBar  handleSearchChange={handleSearchChange} />
     
-    <Grid container width="100%" height="100%" gap={2}   
+    <Grid container width="100%" height="80%" gap={2}   
       sx={{
         overflowX: 'hidden',  // Hide horizontal overflow
         overflowY: 'auto',  // Enable vertical scrolling
         scrollbarWidth: 'thin',  // Firefox
         scrollbarColor: '#a1a1a1 transparent',  // Firefox
         padding: 2,
-        backgroundColor: 'rgba(0,0,0,0.3)',
+        backgroundColor: 'rgba(0,0,0,0.1)',
         borderRadius: '5px',
       }}
       >
         {/* we are destructuring inventory here using the map method */}
-      {inventory.map(({name, quantity, type, description}) => (
+      {filteredInventory.map(({name, quantity, type, description}) => (
         <Grid
           item
           key={name}
@@ -74,8 +108,8 @@ export function Body({ inventory, addItem, removeItem }) {
             
           </Box>
 
-          <Typography variant={'p'} component="div" py={1} mt={2} sx={{ fontSize: 15 }} color="text.secondary">
-            <Typography mb={1}>Description:</Typography> {description.charAt(0).toUpperCase() + description.slice(1)}
+          <Typography variant={'p'} component="div" pb={3} mt={2} sx={{ fontSize: 15 }} color="text.secondary">
+            <Typography sx={{ fontSize: 14 }} mb={1}>Description:</Typography> {description.charAt(0).toUpperCase() + description.slice(1)}
           </Typography>
 
           <Button variant="contained" color="error"  sx={{ backgroundColor: '#ef5350', mb: 4 }}  onClick={() => removeItem(name)}>
@@ -86,7 +120,20 @@ export function Body({ inventory, addItem, removeItem }) {
     </Grid>
   </Box>
   {/* container end */}
+
+
+  <UpdateItemModal
+          open={openUpdateModal}
+          onClose={handleCloseUpdate}
+          item={currentItem}
+          updateItem={updateItem}
+        />
+
+
   </Box>
+
+
+
 
   )
   
